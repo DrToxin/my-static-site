@@ -1,0 +1,110 @@
+/* Сброс и базовая настройка */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* отключает горизонтальную прокрутку */
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+
+/* Шапка */
+header {
+  text-align: center;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+img.logo {
+  width: 150px;
+  margin: 20px auto;
+  display: block;
+}
+
+/* Основной контент */
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.large-text {
+  font-size: 32px;
+  text-align: center;
+  margin: 40px 0;
+}
+
+/* Футер */
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+  padding: 1rem;
+  background-color: #ddd;
+  border-top: 1px solid #bbb;
+}
+
+footer .year {
+  font-weight: bold;
+}
+
+/* Кнопка */
+.button {
+  padding: 10px 20px;
+  text-decoration: none;
+  background-color: #0077cc;
+  color: white;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #005fa3;
+}
+
+/* Навигационный блок, если будет */
+.nav {
+  text-align: center;
+  margin: 20px;
+}
+
+/* Картинки во весь экран */
+img.full-img {
+  max-height: calc(100vh - 140px); /* с учетом header + footer */
+  width: auto;
+  max-width: 100%;
+  display: block;
+  margin: auto;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 600px) {
+  .large-text {
+    font-size: 24px;
+    margin: 20px 0;
+  }
+
+  .button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  footer {
+    flex-direction: column;
+    height: auto;
+    gap: 10px;
+  }
+}
