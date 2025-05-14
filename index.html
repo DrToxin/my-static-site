@@ -11,7 +11,7 @@
   <div id="intro" class="intro-screen screen active">
     <header>
       <img src="emblem.png" alt="ННЦСНИ" />
-	  <h4>СБЗҰҒО - ННЦСНИ</h4>
+	  <h4>ННЦСНИ</h4>
     </header>	
     <h2>Деформографические наблюдения<br>
 	на пунктах<br>
@@ -34,6 +34,7 @@
       <div class="nav-button next" onclick="nextImage()"></div>
       <div class="indicator" id="imageIndicator">1 из 18</div>
     </div>
+	<button class="start-button" onclick="openMap()">Карта</button>
   </div>
 
   <script>
@@ -66,6 +67,9 @@
       document.getElementById("main").classList.add("active");
       showImage(currentIndex);
     }
+	function openMap() {
+		window.location.href = "map.html";
+	}
   </script>
 </body>
 </html>
