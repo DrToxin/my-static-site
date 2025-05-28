@@ -10,20 +10,19 @@
       width: 100%;
     }
     .label-container {
-      position: absolute;
-      pointer-events: none;
-      white-space: nowrap;
-      font-weight: bold;
-      font-size: 12px;
-      color: black;
       background: rgba(255, 255, 255, 0.8);
       padding: 2px 4px;
       border-radius: 3px;
+      font-size: 12px;
+      font-weight: bold;
+      color: black;
+      pointer-events: none;
+      white-space: nowrap;
     }
     #backButton {
       position: absolute;
-      top: 50px;
-      left: 100px;
+      top: 10px;
+      left: 10px;
       z-index: 1000;
       background: white;
       border: 1px solid #ccc;
@@ -31,6 +30,9 @@
       border-radius: 4px;
       cursor: pointer;
       font-weight: bold;
+    }
+    .non-scaling-marker {
+      transform: scale(1) !important;
     }
   </style>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -46,9 +48,9 @@
 
   const map = L.map('map').setView([centerLat, centerLng], 6);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 10,
-    attribution: '© OpenStreetMap contributors'
+  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    maxZoom: 17,
+    attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)'
   }).addTo(map);
 
   const radii = [300, 600, 900];
@@ -58,6 +60,16 @@
       weight: 1,
       radius: r * 1000,
       fillOpacity: 0
+    }).addTo(map);
+
+    // Add label to the left of each circle
+    L.marker([centerLat, centerLng - (r / 111)], {
+      icon: L.divIcon({
+        className: 'label-container non-scaling-marker',
+        html: `${r} км`,
+        iconSize: null
+      }),
+      interactive: false
     }).addTo(map);
   });
 
@@ -75,10 +87,6 @@
               Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
               Math.sin(dLon / 2) ** 2;
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  }
-
-  function getRadiusByMagnitude(mag) {
-    return 100 * Math.pow(1.6, mag); // уменьшено в 10 раз
   }
 
   function formatDate(timestamp) {
@@ -111,35 +119,36 @@
         const distance = getDistanceKm(centerLat, centerLng, lat, lon);
         if (distance <= radiusKm) {
           const color = getColor(distance);
-          const radius = getRadiusByMagnitude(mag);
-          L.circle([lat, lon], {
+
+          const marker = L.circleMarker([lat, lon], {
             color: color,
             fillColor: color,
-            fillOpacity: 0.5,
-            radius: radius
+            fillOpacity: 0.7,
+            radius: 4 + mag * 2
           }).addTo(map);
 
-          const offsetLng = 0.15;
+          marker.bindTooltip(
+            `Магнитуда: ${mag.toFixed(1)}<br>Дата: ${formatDate(time)}`,
+            { direction: 'top', offset: [0, -10], permanent: false, opacity: 0.9 }
+          );
 
-          const magLat = lat;
-          const magLng = lon - offsetLng;
-          const dateLat = lat;
-          const dateLng = lon + offsetLng;
+          // Labels close to the marker
+          const offset = 0.05;
 
-          L.marker([magLat, magLng], {
+          L.marker([lat, lon - offset], {
             icon: L.divIcon({
-              className: 'label-container',
+              className: 'label-container non-scaling-marker',
               html: mag.toFixed(1),
-              iconSize: [50, 20]
+              iconSize: null
             }),
             interactive: false
           }).addTo(map);
 
-          L.marker([dateLat, dateLng], {
+          L.marker([lat, lon + offset], {
             icon: L.divIcon({
-              className: 'label-container',
+              className: 'label-container non-scaling-marker',
               html: formatDate(time),
-              iconSize: [100, 20]
+              iconSize: null
             }),
             interactive: false
           }).addTo(map);
